@@ -14,7 +14,7 @@ const computationMethodWarnings: Partial<Record<SumMethod, string>> = {
 
 export default function SumToNPage() {
   const [isComputing, setIsComputing] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("0");
   const [method, setMethod] = useState<SumMethod>("equation");
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -100,7 +100,14 @@ export default function SumToNPage() {
               type="text"
               inputMode="numeric"
               value={value}
-              onChange={(event) => setValue(event.target.value)}
+              onChange={(event) => {
+                let val = event.target.value ?? 0;
+                val = val.trim();
+
+                if (!/^\d+$/.test(val)) return;
+
+                setValue(`${Number(val)}`);
+              }}
               placeholder="E.g. 100"
               className={[
                 "rounded-xl border px-4 py-3 text-sm outline-none transition focus:border-slate-950 focus:ring-2 focus:ring-slate-950/10",
