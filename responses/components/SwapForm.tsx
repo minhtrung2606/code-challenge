@@ -3,21 +3,16 @@
 import { CoinInput } from "@/components/CoinInput";
 import { TokenOption, TokenSelector } from "@/components/TokenSelector";
 import { SwapFormSubmitPayload, useSwapForm } from "@/hooks/useSwapForm";
+import Image from "next/image";
 
 type SwapFormProps = {
   tokens: TokenOption[];
-  disabled?: boolean;
   onSubmit?: (payload: SwapFormSubmitPayload) => void;
 };
 
-export function SwapForm({
-  tokens,
-  disabled = false,
-  onSubmit,
-}: SwapFormProps) {
+export function SwapForm({ tokens, onSubmit }: SwapFormProps) {
   const swapForm = useSwapForm({
     tokens,
-    disabled,
     onSubmit,
   });
 
@@ -51,7 +46,7 @@ export function SwapForm({
       </div>
 
       <form onSubmit={actions.submit} className="flex flex-col gap-4">
-        <CoinInput>
+        <CoinInput className={flags.disabled ? "bg-gray-50" : ""}>
           <CoinInput.Header>
             <CoinInput.Header.Title
               htmlFor="input-amount"
@@ -111,7 +106,7 @@ export function SwapForm({
           </button>
         </div>
 
-        <CoinInput>
+        <CoinInput className={flags.disabled ? "bg-gray-50" : ""}>
           <CoinInput.Header>
             <CoinInput.Header.Title
               htmlFor="output-amount"
@@ -174,13 +169,22 @@ export function SwapForm({
           type="submit"
           disabled={flags.isSubmitDisabled}
           className={[
-            "rounded-xl px-4 py-3 text-md font-medium text-white transition",
+            "rounded-xl px-4 py-3 text-sm font-medium text-white transition flex flex-row items-center justify-center",
             flags.isSubmitDisabled
               ? "cursor-not-allowed bg-gray-400"
               : "bg-slate-950 hover:bg-slate-800",
           ].join(" ")}
         >
-          CONFIRM SWAP
+          {flags.isLoading && (
+            <Image
+              src="/loader-circle.svg"
+              alt="Swap is in progress"
+              width={20}
+              height={20}
+              className="animate-spin opacity-30"
+            />
+          )}
+          {!flags.isLoading && "CONFIRM SWAP"}
         </button>
       </form>
     </div>

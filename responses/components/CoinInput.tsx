@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 type CoinInputRootProps = {
+  className?: string;
   children: ReactNode;
 };
 
@@ -21,9 +22,14 @@ type CoinInputFooterProps = {
   children: ReactNode;
 };
 
-const CoinInputRoot = ({ children }: CoinInputRootProps) => {
+const CoinInputRoot = ({ className, children }: CoinInputRootProps) => {
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-slate-300 p-4">
+    <div
+      className={[
+        "flex flex-col gap-2 rounded-xl border border-slate-300 p-4",
+        className,
+      ].join(" ")}
+    >
       {children}
     </div>
   );

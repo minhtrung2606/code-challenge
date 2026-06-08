@@ -43,15 +43,11 @@ const swapValidationRules: SwapValidationRule[] = [
 
 type UseSwapFormParams = {
   tokens: TokenOption[];
-  disabled?: boolean;
   onSubmit?: (payload: SwapFormSubmitPayload) => void;
 };
 
-export function useSwapForm({
-  tokens,
-  disabled = false,
-  onSubmit,
-}: UseSwapFormParams) {
+export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [touched, setTouched] = useState(false);
   const [inputAmount, setInputAmount] = useState("0");
 
@@ -125,6 +121,7 @@ export function useSwapForm({
     [swapPreview],
   );
 
+  const disabled = isSubmitting;
   const canSubmit = !validationResult.hasError;
   const isSubmitDisabled = disabled || !canSubmit;
   const shouldShowError = touched && validationResult.hasError;
@@ -141,8 +138,29 @@ export function useSwapForm({
 
     if (isSubmitDisabled) return;
 
-    setTouched(false);
-    onSubmit?.(swapPreview);
+    setIsSubmitting(true);
+
+    async function _doSwap() {
+      try {
+        // Fake async operation
+        await new Promise((res) => {
+          const id = setTimeout(() => {
+            clearTimeout(id);
+            res(1);
+          }, 1500);
+        });
+
+        onSubmit?.(swapPreview);
+      } catch {
+        console.error("Failed to proceed swap with the following data");
+        console.log(swapPreview);
+      } finally {
+        setTouched(false);
+        setIsSubmitting(false);
+      }
+    }
+
+    _doSwap();
   }
 
   function handleSelectFromToken(nextFromToken: TokenSymbol) {
@@ -205,6 +223,7 @@ export function useSwapForm({
 
     flags: {
       disabled,
+      isLoading: isSubmitting,
       isSubmitDisabled,
     },
 
