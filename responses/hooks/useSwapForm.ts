@@ -123,10 +123,11 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
   }, [tokenBySymbol, fromToken, toToken, inputAmount]);
 
   const validationResult = useMemo(() => {
+    const validation = swapValidationRules.find(
+      (validate) => validate(swapPreview).hasError,
+    );
     return (
-      swapValidationRules
-        .map((validate) => validate(swapPreview))
-        .find(({ hasError }) => hasError) || {
+      validation?.(swapPreview) || {
         hasError: false,
         errorMsg: "",
       }
