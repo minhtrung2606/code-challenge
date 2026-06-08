@@ -56,6 +56,15 @@ export default async function SwapPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4">
       <SwapForm tokens={tokens} />
+      <p className="mt-3 text-slate-600 text-sm">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://github.com/minhtrung2606/code-challenge/blob/main/responses/README.md"
+        >
+          View code
+        </a>
+      </p>
     </main>
   );
 }
