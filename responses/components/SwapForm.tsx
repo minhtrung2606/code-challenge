@@ -45,8 +45,19 @@ export function SwapForm({ tokens, onSubmit }: SwapFormProps) {
         </div>
       </div>
 
+      {validation.shouldShowError && validation.result.position !== "input" && (
+        <p className="text-xs text-red-500">{validation.result.errorMsg}</p>
+      )}
+
       <form onSubmit={actions.submit} className="flex flex-col gap-4">
-        <CoinInput className={flags.disabled ? "bg-gray-50" : ""}>
+        <CoinInput
+          className={[
+            flags.disabled ? "bg-gray-50" : "",
+            validation.shouldShowError && validation.result.position === "input"
+              ? "border-red-500!"
+              : "",
+          ].join(" ")}
+        >
           <CoinInput.Header>
             <CoinInput.Header.Title
               htmlFor="input-amount"
@@ -72,7 +83,7 @@ export function SwapForm({ tokens, onSubmit }: SwapFormProps) {
               placeholder="0.00"
               disabled={flags.disabled}
               className="min-w-0 flex-1 bg-transparent text-3xl font-semibold text-slate-950 outline-none placeholder:text-slate-300"
-              onBlur={actions.touch}
+              onKeyDown={actions.touch}
             />
 
             <TokenSelector
@@ -86,6 +97,13 @@ export function SwapForm({ tokens, onSubmit }: SwapFormProps) {
           <CoinInput.Footer>
             {swapForm.tokens.bySymbol[values.fromToken]?.name}
           </CoinInput.Footer>
+
+          {validation.shouldShowError &&
+            validation.result.position === "input" && (
+              <p className="text-xs text-red-500">
+                {validation.result.errorMsg}
+              </p>
+            )}
         </CoinInput>
 
         <div className="flex justify-center">
@@ -160,10 +178,6 @@ export function SwapForm({ tokens, onSubmit }: SwapFormProps) {
             </span>
           </div>
         </div>
-
-        {validation.shouldShowError && (
-          <p className="text-xs text-red-500">{validation.result.errorMsg}</p>
-        )}
 
         <button
           type="submit"

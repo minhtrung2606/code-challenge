@@ -1,6 +1,7 @@
 import { TokenOption, TokenSymbol } from "@/components/TokenSelector";
 import { formatAmount, getPairRate, parseAmount } from "@/utils/swap";
 import { FormEvent, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const SWAP_FEE_RATE = 0.003;
 
@@ -14,19 +15,29 @@ export type SwapFormSubmitPayload = {
   exchangeRate: number;
 };
 
-export type SwapPreview = SwapFormSubmitPayload;
+export type SwapPreview = {
+  rawInputAmount: string;
+} & SwapFormSubmitPayload;
 
 type SwapValidationResult = {
   hasError: boolean;
   errorMsg: string;
+  position?: string;
 };
 
 type SwapValidationRule = (swapPreview: SwapPreview) => SwapValidationResult;
 
 const swapValidationRules: SwapValidationRule[] = [
   (swapPreview) => ({
+    hasError: isIncompleteFloat(swapPreview.rawInputAmount),
+    errorMsg: "Enter a valid number.",
+    position: "input",
+  }),
+
+  (swapPreview) => ({
     hasError: swapPreview.inputAmount <= 0,
     errorMsg: "Enter an amount greater than 0.",
+    position: "input",
   }),
 
   (swapPreview) => ({
@@ -59,8 +70,6 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
     tokens[1]?.symbol ?? tokens[0]?.symbol ?? "",
   );
 
-  const numericInputAmount = parseAmount(inputAmount);
-
   const tokenBySymbol = useMemo<Record<TokenSymbol, TokenOption>>(
     () => Object.fromEntries(tokens.map((token) => [token.symbol, token])),
     [tokens],
@@ -75,10 +84,13 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
       toUsdRate,
     });
 
+    const numericInputAmount = parseAmount(inputAmount);
+
     const basePreview: SwapPreview = {
       fromToken,
       toToken,
       inputAmount: numericInputAmount,
+      rawInputAmount: inputAmount,
       outputAmount: 0,
       feeAmount: 0,
       minimumReceived: 0,
@@ -108,18 +120,18 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
       feeAmount,
       minimumReceived,
     };
-  }, [numericInputAmount, tokenBySymbol, fromToken, toToken]);
+  }, [tokenBySymbol, fromToken, toToken, inputAmount]);
 
-  const validationResult = useMemo(
-    () =>
+  const validationResult = useMemo(() => {
+    return (
       swapValidationRules
         .map((validate) => validate(swapPreview))
         .find(({ hasError }) => hasError) || {
         hasError: false,
         errorMsg: "",
-      },
-    [swapPreview],
-  );
+      }
+    );
+  }, [swapPreview]);
 
   const disabled = isSubmitting;
   const canSubmit = !validationResult.hasError;
@@ -133,6 +145,10 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
     setToToken(fromToken);
   }
 
+  function clearForm() {
+    setInputAmount("0");
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -143,15 +159,24 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
     async function _doSwap() {
       try {
         // Fake async operation
-        await new Promise((res) => {
+        await new Promise((res, rej) => {
           const id = setTimeout(() => {
             clearTimeout(id);
-            res(1);
+
+            const rand = Math.random();
+            if (rand > 0.3) {
+              res(1);
+            } else {
+              rej(0);
+            }
           }, 1500);
         });
 
         onSubmit?.(swapPreview);
+        clearForm();
+        toast.success("Swap completed successfully.");
       } catch {
+        toast.error("Swap failed. Please try again.");
         console.error("Failed to proceed swap with the following data");
         console.log(swapPreview);
       } finally {
@@ -189,7 +214,7 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
     if (disabled) return;
     if (!/^\d*\.?\d*$/.test(value)) return;
 
-    setInputAmount(`${Number(value)}`);
+    setInputAmount(isIncompleteFloat(value) ? value : `${Number(value)}`);
   }
 
   return {
@@ -236,4 +261,8 @@ export function useSwapForm({ tokens, onSubmit }: UseSwapFormParams) {
       touch: () => setTouched(true),
     },
   };
+}
+
+function isIncompleteFloat(value: string) {
+  return value.includes(".") && !value.split(".")[1];
 }
