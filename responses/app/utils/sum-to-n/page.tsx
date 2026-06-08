@@ -148,6 +148,15 @@ export default function SumToNPage() {
           </div>
         ) : null}
       </div>
+      <p className="mt-3 text-slate-600 text-sm">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://github.com/minhtrung2606/code-challenge/blob/main/responses/utils/sum-to-n.ts"
+        >
+          View code
+        </a>
+      </p>
     </main>
   );
 }
