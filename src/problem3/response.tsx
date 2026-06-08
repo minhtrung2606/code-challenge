@@ -35,7 +35,7 @@
  *   But it's weird when filtering out balances having amounts less than or equal 0
  *   For initial WalletPage without any special conditions, it should show a list of all balances even including 0 amount
  *   (we can later add up a condition to show/hide balances having 0 amount)
- *   => with the assumption of displaying all user possessed balances, then remove the if statement of `balance.amount <= 0`
+ *   => with the assumption of displaying all user balances and the balances will not be negative, then remove the if statement of `balance.amount <= 0`
  *   and simplify the filter predicate callback function
  */
 

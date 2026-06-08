@@ -153,7 +153,7 @@ export default function SumToNPage() {
         <a
           target="_blank"
           rel="noreferrer"
-          href="https://github.com/minhtrung2606/code-challenge/blob/main/responses/utils/sum-to-n.ts"
+          href="https://github.com/minhtrung2606/code-challenge/blob/main/src/problem1/response.md"
         >
           View code
         </a>
