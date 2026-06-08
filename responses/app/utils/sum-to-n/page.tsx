@@ -47,7 +47,11 @@ export default function SumToNPage() {
       const sum = await sumToN(trimmedValue, method);
       setResult(sum);
     } catch (e) {
-      setError(e.message ?? "Failed to compute");
+      if (e instanceof Error) {
+        setError(e.message ?? "Failed to compute");
+      } else {
+        setError("Failed to compute");
+      }
     } finally {
       setIsComputing(false);
     }
