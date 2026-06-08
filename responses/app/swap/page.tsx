@@ -1,5 +1,6 @@
 import { SwapForm } from "@/components/SwapForm";
 import { TokenOption } from "@/components/TokenSelector";
+import Link from "next/link";
 
 type TokenPrice = {
   currency: string;
@@ -56,7 +57,7 @@ export default async function SwapPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4">
       <SwapForm tokens={tokens} />
-      <p className="mt-3 text-slate-600 text-sm">
+      <p className="mt-3 text-slate-600 text-sm flex flex-row items-center justify-between text-center w-full max-w-md px-3">
         <a
           target="_blank"
           rel="noreferrer"
@@ -64,6 +65,7 @@ export default async function SwapPage() {
         >
           View code
         </a>
+        <Link href="/">Home</Link>
       </p>
     </main>
   );

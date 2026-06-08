@@ -36,12 +36,20 @@ export default function HomePage() {
               Take-home assignment responses
             </h1>
 
-            <p className="max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+            <p className="max-w-2xl text-base leading-7 text-slate-600">
               This page contains my submitted responses, source code, and live
               preview for the interview take-home assignment.
             </p>
           </div>
         </div>
+
+        <section className="rounded-3xl bg-blue-200 text-slate-700 p-6 inset-shadow-sm inset-shadow-slate-900/10 font-bold">
+          Thank you for reviewing my submission. I sincerely appreciate the
+          opportunity to work on this assignment and demonstrate my approach to
+          problem-solving, code quality, and user experience. I am excited about
+          the possibility of joining your team and contributing with care,
+          responsibility, and continuous improvement.
+        </section>
 
         <section className="grid gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2">
           <div className="flex flex-col gap-1">
@@ -76,7 +84,7 @@ export default function HomePage() {
         <section className="flex flex-col gap-4">
           <div>
             <h2 className="text-2xl font-semibold">Responses</h2>
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-slate-600 text-base">
               Navigate to each response page below.
             </p>
           </div>

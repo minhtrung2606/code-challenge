@@ -5,6 +5,7 @@ import {
   SumMethod,
 } from "@/components/ComputationMethodSelector";
 import { sumToN } from "@/utils/sum-to-n";
+import Link from "next/link";
 import { useState } from "react";
 
 const computationMethodWarnings: Partial<Record<SumMethod, string>> = {
@@ -148,7 +149,7 @@ export default function SumToNPage() {
           </div>
         ) : null}
       </div>
-      <p className="mt-3 text-slate-600 text-sm">
+      <p className="mt-3 text-slate-600 text-sm flex flex-row items-center justify-between text-center w-full max-w-md px-3">
         <a
           target="_blank"
           rel="noreferrer"
@@ -156,6 +157,7 @@ export default function SumToNPage() {
         >
           View code
         </a>
+        <Link href="/">Home</Link>
       </p>
     </main>
   );
